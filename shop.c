@@ -45,6 +45,17 @@ void printProduct(struct Product p){
    printf("--------------------------\n");  
 };
 
+struct Product getProduct(struct Shop s, char* pname){
+   // check the shop for a product and return it
+   struct Product p;
+   for (int i = 0; i < s.index; i++){
+      if(strcmp(s.stock[i].product.name,pname)==0){
+        p = s.stock[i].product;
+      }
+   }
+   return p;
+};
+
 void printCustomer(struct Customer c){
    // take in a product and print its name and price  
    printf("CUSTOMER NAME: %s\nCUSTOMER BUDGET: €%.2f\n", c.name, c.budget);    
@@ -58,42 +69,99 @@ void printCustomer(struct Customer c){
 };
 
 struct Shop createStockShop(){
-      // initialise the shop with 200 in cash
-      struct Shop shop = {200};
 
-      //define the file
-      FILE * fp;
-      char * line = NULL;
-      size_t len = 0;
-      ssize_t read;
+   //define the file
+   FILE * fp;
+   char * line = NULL;
+   size_t len = 0;
+   ssize_t read;
 
-      fp = fopen("stock.csv", "r");
-      if (fp == NULL)
-        exit(EXIT_FAILURE);
+   // open the file
+   fp = fopen("stock.csv", "r");
+   // if the file doesn't exist - throw an error
+   if (fp == NULL)
+     exit(EXIT_FAILURE);
 
-      while ((read = getline(&line, &len, fp)) != -1) {
-        // read the name as 'n'    
-        char* n = strtok(line, ",");
-        // read the price as 'p'
-        char* p = strtok(NULL, ",");
-        // read the quantiy as 'q'
-        char* q= strtok(NULL, ",");
-        // convert 'q' to int 'quantity'
-        int quantity = atoi(q);
-        // convert 'p' to double 'price'
-        double price = atof(p);
-        // allocate memory yto the name and copy in 'n'
-        char* name = malloc(sizeof(char) * 50);
-        strcpy(name,n);
-        // create a product and product stock with the information from the file 
-        struct Product product = {name,price};
-        struct ProductStock stockItem = {product,quantity};
-        // increment the index and put the stock item in to the stock array
-        shop.stock[shop.index++] = stockItem;
-        //printf("NAME OF PRODUCT: %s, PRICE: %.2f, QUANTITY: %d\n", name, price, quantity);
+   // read the first line from the file
+   double line1 = getline(&line,&len,fp);
+   char* c = strtok(line, ",");
+   double cash = atof(c);
+   // initialise the shop with the cash from the first line in the file
+   struct Shop shop = {cash};
+   //loop through the remainder for the file and create the stock
+   while ((read = getline(&line, &len, fp)) != -1) {
+     //printf("read: %ld\n", read); 
+     // read the name as 'n'    
+     char* n = strtok(line, ",");
+     // read the price as 'p'
+     char* p = strtok(NULL, ",");
+     // read the quantiy as 'q'
+     char* q= strtok(NULL, ",");
+     // convert 'q' to int 'quantity'
+     int quantity = atoi(q);
+     // convert 'p' to double 'price'
+     double price = atof(p);
+     // allocate memory to the name and copy in 'n'
+     char* name = malloc(sizeof(char) * 50);
+     strcpy(name,n);
+     // create a product and product stock with the information from the file 
+     struct Product product = {name,price};
+     struct ProductStock stockItem = {product,quantity};
+     // increment the index and put the stock item in to the stock array
+     shop.stock[shop.index++] = stockItem;
     }
     return shop; 
 };
+
+struct Customer createNewCustomer(struct Shop s){
+//define the file
+   FILE * fp;
+   char * line = NULL;
+   size_t len = 0;
+   ssize_t read;
+
+   // open the file
+   fp = fopen("order.csv", "r");
+   // if the file doesn't exist - throw an error
+   if (fp == NULL)
+     exit(EXIT_FAILURE);
+
+   // read the first line from the file
+   double line1 = getline(&line,&len,fp);
+   //read the customer name as cn
+   char* cn = strtok(line, ",");
+   // read the customer budget as cb
+   char* cb = strtok(NULL, ",");
+
+   // allocate memory to the customer name and copy in 'cn'
+   char* custName = malloc(sizeof(char) * 50);
+   strcpy(custName,cn);
+   // convert the budget to a double
+   double custBudget = atof(cb);
+
+   // initialise the customer 
+   struct Customer customer = {custName,custBudget};
+
+   //loop through the remainder for the file and create the shopping list
+   while ((read = getline(&line, &len, fp)) != -1) {
+     // read the product name as 'pn'    
+     char* pn = strtok(line, ",");
+     // read the productquantiy as 'qn'
+     char* qn = strtok(NULL, ",");
+     // convert 'qn' to int 'ordQuantity'
+     int ordQuantity = atoi(qn);
+     // allocate memory yto the product name and copy in 'n'
+     char* prodName = malloc(sizeof(char) * 50);
+     strcpy(prodName,pn);
+     // create a product and product stock with the information from the file 
+     struct Product product = {prodName,getProduct(s, prodName).price};
+     struct ProductStock listItem = {product,ordQuantity};
+     // increment the index and put the stock item in to the stock array
+     customer.shoppingList[customer.index++] = listItem;
+    }
+    return customer;
+};
+
 
 void printShop(struct Shop s){
    //print the cash in the shop
@@ -107,22 +175,8 @@ void printShop(struct Shop s){
 
 int main(void)
 {
-   // test the code
-   //struct Customer dominic = {"Dominic", 100.0};
-   //struct Product coke = {"Can Coke", 1.10};
-   //struct Product bread = {"Bread", 0.7};
-   //struct ProductStock cokeStock = {coke, 20};
-   //struct ProductStock breadStock = {bread, 2};
-   //printProduct(coke);
-   //printCustomer(dominic);
-
-   //dominic.shoppingList[dominic.index++] = cokeStock;
-   //dominic.shoppingList[dominic.index++] = breadStock;
-   //printCustomer(dominic);
-   //printf("Customer name is %s\n", dominic.name); 
-   //printf("The %s costs €%.2f\n", coke.name, coke.price);  
-   //printf("The shop has %d of the product %s\n", cokeStock.quantity, cokeStock.product.name );
    struct Shop shop = createStockShop();
-   printShop(shop);
+   struct Customer newCustomer = createNewCustomer(shop);
+   printCustomer(newCustomer); 
    return 0;
 }
