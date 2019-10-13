@@ -173,10 +173,44 @@ void printShop(struct Shop s){
    }
 };
 
+void processOrder(struct Shop* s, struct Customer* c){
+   // create a variable to store the total cost of the order
+   double orderTotal = 0;
+   // loop through the order and calculate the total cost
+   for(int i = 0; i < c->index; i++){
+   orderTotal = orderTotal + (c->shoppingList[i].product.price * c->shoppingList[i].quantity);
+   }
+   // if the total cost is greater that the budget, throw an error and terminate the transaction
+   if(orderTotal > c->budget){
+      printf("ERROR: order total exceeds customer budget.\n"); 
+      exit(0);
+   }
+   // check if we have each item on the order in stock
+   for(int i = 0; i < c->index; i++){
+      for(int j = 0; j < s->index; j++){
+         if(strcmp(c->shoppingList[i].product.name,s->stock[j].product.name)==0){
+            // check do we have enough in stock
+            if(c->shoppingList[i].quantity > s->stock[j].quantity){
+               printf("ERROR: Not enough %s  in stock to fulfil order.\n", c->shoppingList[i].product.name);
+               exit(0);
+            }   
+            //deplete the shop stock by the ordered amount
+            s->stock[j].quantity -= c->shoppingList[i].quantity;
+            // update the cash in by the amount of the line of the order
+            s->cash += c->shoppingList[i].product.price * c->shoppingList[i].quantity;
+            // deplete the budget by the same amount
+            c->budget -= c->shoppingList[i].product.price * c->shoppingList[i].quantity; 
+            }
+      }
+   }
+   //printf("Test: %.2f\n", orderTotal);  
+};
+
+
 int main(void)
-{
+{  // create a shop and customer
    struct Shop shop = createStockShop();
    struct Customer newCustomer = createNewCustomer(shop);
-   printCustomer(newCustomer); 
+   processOrder(&shop, &newCustomer);
    return 0;
 }
