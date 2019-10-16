@@ -191,7 +191,7 @@ void processOrder(struct Shop* s, struct Customer* c){
          if(strcmp(c->shoppingList[i].product.name,s->stock[j].product.name)==0){
             // check do we have enough in stock
             if(c->shoppingList[i].quantity > s->stock[j].quantity){
-               printf("ERROR: Not enough %s  in stock to fulfil order.\n", c->shoppingList[i].product.name);
+               printf("ERROR: Not enough %s in stock to fulfil order.\n", c->shoppingList[i].product.name);
                exit(0);
             }   
             //deplete the shop stock by the ordered amount
