@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
  //a structure is a custom data type (like an object without the methods)   
 
 //product structure
@@ -165,11 +166,16 @@ struct Customer createNewCustomer(struct Shop s){
 
 void printShop(struct Shop s){
    //print the cash in the shop
+   system("@cls||clear");
    printf("Shop has %.2f in cash\n", s.cash);
+   printf("-----------------------------\n");
+   printf("| Product             |  Qty |\n");
+   printf("-----------------------------\n");
    //print the details of each product in the shop
    for(int i =0; i<s.index; i++){
-      printProduct(s.stock[i].product);
-      printf("The shop has %d of the above\n", s.stock[i].quantity);
+      //printProduct(s.stock[i].product);
+      printf("| %-20.20s| %.5d|\n", s.stock[i].product.name, s.stock[i].quantity);
+      printf("|----------------------------|\n");
    }
 };
 
@@ -211,6 +217,6 @@ int main(void)
 {  // create a shop and customer
    struct Shop shop = createStockShop();
    struct Customer newCustomer = createNewCustomer(shop);
-   processOrder(&shop, &newCustomer);
+   printShop(shop);
    return 0;
 }
