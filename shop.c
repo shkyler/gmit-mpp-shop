@@ -58,15 +58,28 @@ struct Product getProduct(struct Shop s, char* pname){
 };
 
 void printCustomer(struct Customer c){
-   // take in a product and print its name and price  
-   printf("CUSTOMER NAME: %s\nCUSTOMER BUDGET: €%.2f\n", c.name, c.budget);    
-   printf("--------------------------\n"); 
-   for(int i = 0; i < c.index; i++){
-      printProduct(c.shoppingList[i].product);
-      printf("%s ORDERS %d OF ABOVE PRODUCT\n", c.name, c.shoppingList[i].quantity);
-      double cost = c.shoppingList[i].quantity * c.shoppingList[i].product.price;
-      printf("The cost to %s will be €%.2f\n", c.name, cost);
+   //print the cash in the shop
+   //system("@cls||clear");
+   double totalCost = 0.0;
+   printf("-----------------------------------------------------\n");
+   printf("%s has a budget of %.2f in cash\n", c.name, c.budget);
+   printf("-----------------------------------------------------\n");
+   printf("%s's Shopping List:\n", c.name);
+   printf("-----------------------------------------------------\n");
+   printf("| Product             |  Qty | Cost Each | Line Cost |\n");
+   printf("-----------------------------------------------------\n");
+   //print the details of each product in the shop
+   for(int i =0; i<c.index; i++){
+      // calculate line cost
+      double lineCost = c.shoppingList[i].quantity * c.shoppingList[i].product.price;
+      //printProduct(s.stock[i].product);
+      printf("| %-20.20s| %.5d| %10.2f| %10.2f|\n", c.shoppingList[i].product.name, c.shoppingList[i].quantity,c.shoppingList[i].product.price,lineCost);
+      printf("-----------------------------------------------------\n");
+      // add the line cost to the total
+      totalCost += lineCost;
    };
+   printf("%s's Total Bill :%.2f\n", c.name, totalCost);
+   printf("-----------------------------------------------------\n");
 };
 
 struct Shop createStockShop(){
@@ -166,7 +179,7 @@ struct Customer createNewCustomer(struct Shop s){
 
 void printShop(struct Shop s){
    //print the cash in the shop
-   system("@cls||clear");
+   //system("@cls||clear");
    printf("Shop has %.2f in cash\n", s.cash);
    printf("-----------------------------\n");
    printf("| Product             |  Qty |\n");
@@ -218,5 +231,6 @@ int main(void)
    struct Shop shop = createStockShop();
    struct Customer newCustomer = createNewCustomer(shop);
    printShop(shop);
+   printCustomer(newCustomer);
    return 0;
 }
