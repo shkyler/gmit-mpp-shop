@@ -192,6 +192,20 @@ void printShop(struct Shop s){
    }
 };
 
+char* findProduct(struct Shop* s, char *n){
+   //take in a shop and a string
+   // loop through the shop stock
+   for(int j = 0; j < s->index; j++){
+      // check if the item entered is in stock
+      if(strcmp(s->stock[j].product.name,n)==0){
+         // if so return the product name
+         return s->stock[j].product.name;   
+         }         
+   }
+   //if not return "Not in Stock"
+   return "NULL";
+}
+
 void processOrder(struct Shop* s, struct Customer* c){
    // create a variable to store the total cost of the order
    double orderTotal = 0;
@@ -203,6 +217,13 @@ void processOrder(struct Shop* s, struct Customer* c){
    if(orderTotal > c->budget){
       printf("ERROR: order total exceeds customer budget.\n"); 
       exit(0);
+   }
+   // check is each item stocked
+   for(int i = 0; i < c->index; i++){
+      if (strcmp(findProduct(s, c->shoppingList[i].product.name),"NULL")==0){
+         printf("ERROR: Non Stock Item, %s, on Customer Order.\n",c->shoppingList[i].product.name);
+         exit(0);
+      }
    }
    // check if we have each item on the order in stock
    for(int i = 0; i < c->index; i++){
@@ -231,6 +252,9 @@ int main(void)
    struct Shop shop = createStockShop();
    struct Customer newCustomer = createNewCustomer(shop);
    printShop(shop);
+   processOrder(&shop, &newCustomer);
+   printShop(shop);
    printCustomer(newCustomer);
+   printf("%s\n",findProduct(&shop, "Bin Bags"));
    return 0;
 }
