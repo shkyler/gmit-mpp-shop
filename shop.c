@@ -82,7 +82,7 @@ void printCustomer(struct Customer c){
    printf("-----------------------------------------------------\n");
 };
 
-struct Shop createStockShop(){
+struct Shop createStockShop(char* csvFile){
 
    //define the file
    FILE * fp;
@@ -91,7 +91,7 @@ struct Shop createStockShop(){
    ssize_t read;
 
    // open the file
-   fp = fopen("stock.csv", "r");
+   fp = fopen(csvFile, "r");
    // if the file doesn't exist - throw an error
    if (fp == NULL)
      exit(EXIT_FAILURE);
@@ -127,7 +127,7 @@ struct Shop createStockShop(){
     return shop; 
 };
 
-struct Customer createNewCustomer(struct Shop s){
+struct Customer createNewCustomer(struct Shop s, char* csvFile){
 //define the file
    FILE * fp;
    char * line = NULL;
@@ -135,7 +135,7 @@ struct Customer createNewCustomer(struct Shop s){
    ssize_t read;
 
    // open the file
-   fp = fopen("order.csv", "r");
+   fp = fopen(csvFile, "r");
    // if the file doesn't exist - throw an error
    if (fp == NULL)
      exit(EXIT_FAILURE);
@@ -246,15 +246,71 @@ void processOrder(struct Shop* s, struct Customer* c){
    //printf("Test: %.2f\n", orderTotal);  
 };
 
+void mainScreen(struct Shop s){
+   int choice = 0;
+   char menuReturn;
+   char fileName;
+   struct Customer newCustomer;
+   
+
+   printf("WELCOME TO THE SHOP\n");
+   printf("\n");
+   printf("Please select one of the followinf options\n");
+   printf("\n");
+   printf("\n");
+   printf("1. Import Customer Order from File\n");
+   printf("\n");
+   printf("\n");
+   printf("2. Print Customer Order\n");
+   printf("\n");
+   printf("\n");
+   printf("3. Print Shop Status\n");
+   printf("\n");
+   printf("\n");
+   printf("4. Create an Ad-hoc Purchase\n");
+	scanf("%d", &choice);
+   if(choice == 1){
+      printf("Please enter the file for the order you'd like to import: \n");
+      scanf("%s", &fileName);
+      printf("%s", &fileName);
+      newCustomer = createNewCustomer(s, &fileName);
+      printf("Success!\n");
+      //system("@cls||clear");
+      mainScreen(s);
+   }
+   else if(choice == 2){
+      printCustomer(newCustomer);
+      //system("@cls||clear");
+      mainScreen(s);
+   }
+   else if(choice == 3){
+      printShop(s);
+      scanf("%s", &menuReturn);
+      //system("@cls||clear");
+      mainScreen(s);
+   }
+   else if(choice == 4){
+      // need code here
+      printf("choice 4\n");
+      //system("@cls||clear");
+      mainScreen(s);
+   }
+   else{
+      printf("ERROR: Invalid selection, please choose again.\n");
+      mainScreen(s);
+   }
+}
+
 
 int main(void)
 {  // create a shop and customer
-   struct Shop shop = createStockShop();
-   struct Customer newCustomer = createNewCustomer(shop);
-   printShop(shop);
-   processOrder(&shop, &newCustomer);
-   printShop(shop);
-   printCustomer(newCustomer);
-   printf("%s\n",findProduct(&shop, "Bin Bags"));
+   struct Shop shop = createStockShop("stock.csv");
+   mainScreen(shop);
+   
+   //printShop(shop);
+   //processOrder(&shop, &newCustomer);
+   //printShop(shop);
+   //printCustomer(newCustomer);
+   //printf("%s\n",findProduct(&shop, "Bin Bags"));
    return 0;
 }
