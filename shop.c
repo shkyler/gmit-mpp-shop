@@ -250,60 +250,62 @@ void mainScreen(struct Shop s){
    int choice = 0;
    char menuReturn;
    char fileName;
-   struct Customer newCustomer;
+    
 
    printf("WELCOME TO THE SHOP\n");
    printf("\n");
-   printf("Please select one of the followinf options\n");
+   printf("Please select one of the following options\n");
    printf("\n");
    printf("\n");
-   printf("1. Import Customer Order from File\n");
+   printf("1. Import and process customer order from file\n");
    printf("\n");
    printf("\n");
-   printf("2. Print Customer Order\n");
+   printf("2. Print Shop Status\n");
    printf("\n");
    printf("\n");
-   printf("3. Print Shop Status\n");
-   printf("\n");
-   printf("\n");
-   printf("4. Create an Ad-hoc Purchase\n");
+   printf("3. Create an Ad-hoc Purchase\n");
 	scanf("%d", &choice);
-   if(choice == 1){
+   if(choice == 1)
+   {
       printf("Please enter the file for the order you'd like to import: \n");
       scanf("%s", &fileName);
       printf("%s", &fileName);
-      newCustomer = createNewCustomer(s, &fileName);
-      printf("Success!\n");
-      //system("@cls||clear");
+      struct Customer newCustomer = createNewCustomer(s, &fileName);
+      // process the order
+      processOrder(&s, &newCustomer);
+      system("@cls||clear");
+      printf("\nOrder has successfully been processed.\n");
+      
       mainScreen(s);
    }
-   else if(choice == 2){
-      printCustomer(newCustomer);
-      //system("@cls||clear");
-      mainScreen(s);
-   }
-   else if(choice == 3){
+
+   else if(choice == 2)
+   {
+      system("@cls||clear");
       printShop(s);
+      printf("Enter any value to return to the main menu.\n");
       scanf("%s", &menuReturn);
-      //system("@cls||clear");
+      system("@cls||clear");
       mainScreen(s);
    }
-   else if(choice == 4){
+   else if(choice == 3)
+   {
       // need code here
-      printf("choice 4\n");
+      printf("choice 3\n");
       //system("@cls||clear");
+   }
+   else
+   {
       mainScreen(s);
    }
-   else{
-      printf("ERROR: Invalid selection, please choose again.\n");
-      mainScreen(s);
-   }
+   
 }
 
 
 int main(void)
 {  // create a shop and customer
    struct Shop shop = createStockShop("stock.csv");
+   system("@cls||clear");
    mainScreen(shop);
    
    //printShop(shop);
