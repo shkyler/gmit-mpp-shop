@@ -251,7 +251,6 @@ void mainScreen(struct Shop s){
    char menuReturn;
    char fileName;
    struct Customer newCustomer;
-   
 
    printf("WELCOME TO THE SHOP\n");
    printf("\n");
