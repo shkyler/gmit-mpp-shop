@@ -30,6 +30,12 @@ struct Customer {
    int index;
 };
 
+//live order structure
+struct liveOrder{
+   struct ProductStock liveList[10];
+   int index;
+};
+
 // shop structure
 struct Shop {
    // a shop will have cash (this is the opening cash in the shop)
@@ -62,9 +68,7 @@ void printCustomer(struct Customer c){
    //system("@cls||clear");
    double totalCost = 0.0;
    printf("-----------------------------------------------------\n");
-   printf("%s has a budget of %.2f in cash\n", c.name, c.budget);
-   printf("-----------------------------------------------------\n");
-   printf("%s's Shopping List:\n", c.name);
+   printf("%s's Order:\n", c.name);
    printf("-----------------------------------------------------\n");
    printf("| Product             |  Qty | Cost Each | Line Cost |\n");
    printf("-----------------------------------------------------\n");
@@ -78,7 +82,7 @@ void printCustomer(struct Customer c){
       // add the line cost to the total
       totalCost += lineCost;
    };
-   printf("%s's Total Bill :%.2f\n", c.name, totalCost);
+   printf("%s's Total Bill :                  %.2f\n", c.name, totalCost);
    printf("-----------------------------------------------------\n");
 };
 
@@ -179,8 +183,9 @@ struct Customer createNewCustomer(struct Shop s, char* csvFile){
 
 void printShop(struct Shop s){
    //print the cash in the shop
-   //system("@cls||clear");
+   printf("-----------------------------\n");
    printf("Shop has %.2f in cash\n", s.cash);
+   //deisplay a nice header
    printf("-----------------------------\n");
    printf("| Product             |  Qty |\n");
    printf("-----------------------------\n");
@@ -215,13 +220,13 @@ void processOrder(struct Shop* s, struct Customer* c){
    }
    // if the total cost is greater that the budget, throw an error and terminate the transaction
    if(orderTotal > c->budget){
-      printf("ERROR: order total exceeds customer budget.\n"); 
+      printf("\nERROR: order total exceeds customer budget.\n"); 
       exit(0);
    }
    // check is each item stocked
    for(int i = 0; i < c->index; i++){
       if (strcmp(findProduct(s, c->shoppingList[i].product.name),"NULL")==0){
-         printf("ERROR: Non Stock Item, %s, on Customer Order.\n",c->shoppingList[i].product.name);
+         printf("\nERROR: Non Stock Item, %s, on Customer Order.\n",c->shoppingList[i].product.name);
          exit(0);
       }
    }
@@ -231,7 +236,7 @@ void processOrder(struct Shop* s, struct Customer* c){
          if(strcmp(c->shoppingList[i].product.name,s->stock[j].product.name)==0){
             // check do we have enough in stock
             if(c->shoppingList[i].quantity > s->stock[j].quantity){
-               printf("ERROR: Not enough %s in stock to fulfil order.\n", c->shoppingList[i].product.name);
+               printf("\nERROR: Not enough %s in stock to fulfil order.\n", c->shoppingList[i].product.name);
                exit(0);
             }   
             //deplete the shop stock by the ordered amount
@@ -242,8 +247,41 @@ void processOrder(struct Shop* s, struct Customer* c){
             c->budget -= c->shoppingList[i].product.price * c->shoppingList[i].quantity; 
             }
       }
-   }
-   //printf("Test: %.2f\n", orderTotal);  
+   } 
+};
+
+void processLiveOrder(struct Shop* s){
+   //create a structure for the order
+   struct liveOrder order;
+   // this is used a boolean operator a while loop
+   char continueOrder;
+   // keep accepting items until the users says no
+   while(strcmp(&continueOrder, "n") != 0){
+      //comment
+      int requestQty;
+      char* item = malloc(sizeof(char)*120);
+      // ask what the user wants
+      printf("What would you like to purchase?");
+      scanf("\n%[^\n]%*c", item);
+      //store the input in the list  
+      order.liveList[order.index].product.name = item;
+      // ask how many are required
+      printf("How many do you need?");
+      scanf("%d", &requestQty);
+      order.liveList[order.index].quantity = requestQty;
+      // increment the index
+      order.index +=1;
+      // ask the user do they want to enter more items
+      system("@cls||clear");
+      printf("\nWould you like to order anything else? (y/n)");
+      scanf("\n%s", &continueOrder);
+
+   };
+      // process the order - need to copy down the code from above and mod it for this
+      printf("%s\n", order.liveList[3].product.name);
+      printf("%d\n", order.liveList[3].quantity);
+   
+
 };
 
 void mainScreen(struct Shop s){
@@ -266,16 +304,19 @@ void mainScreen(struct Shop s){
    printf("3. Create an Ad-hoc Purchase\n");
 	scanf("%d", &choice);
    if(choice == 1)
-   {
+   {  
+      system("@cls||clear");
       printf("Please enter the file for the order you'd like to import: \n");
       scanf("%s", &fileName);
-      printf("%s", &fileName);
       struct Customer newCustomer = createNewCustomer(s, &fileName);
       // process the order
       processOrder(&s, &newCustomer);
       system("@cls||clear");
       printf("\nOrder has successfully been processed.\n");
-      
+      printCustomer(newCustomer);
+      printf("Enter any value to return to the main menu.\n");
+      scanf("%s", &menuReturn);
+      system("@cls||clear");
       mainScreen(s);
    }
 
@@ -291,7 +332,7 @@ void mainScreen(struct Shop s){
    else if(choice == 3)
    {
       // need code here
-      printf("choice 3\n");
+      processLiveOrder(&s);
       //system("@cls||clear");
    }
    else
