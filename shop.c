@@ -250,39 +250,101 @@ void processOrder(struct Shop* s, struct Customer* c){
    } 
 };
 
-void processLiveOrder(struct Shop* s){
+struct liveOrder createLiveOrder(struct Shop s){
    //create a structure for the order
    struct liveOrder order;
+   order.index = 0;
+   printf("Start Index: %d", order.index);
    // this is used a boolean operator a while loop
    char continueOrder;
    // keep accepting items until the users says no
    while(strcmp(&continueOrder, "n") != 0){
-      //comment
-      int requestQty;
+      //allocate memory for the inputs
+     
       char* item = malloc(sizeof(char)*120);
+      int requestQty;
+  
       // ask what the user wants
       printf("What would you like to purchase?");
-      scanf("\n%[^\n]%*c", item);
-      //store the input in the list  
-      order.liveList[order.index].product.name = item;
+      scanf("\n%[^\n]%*c",item);
+     
+
       // ask how many are required
       printf("How many do you need?");
-      scanf("%d", &requestQty);
-      order.liveList[order.index].quantity = requestQty;
-      // increment the index
-      order.index +=1;
+      scanf("%d",&requestQty);
+    
+      // create a product and product stock with the information from the user input
+      struct Product product = {item,getProduct(s, item).price};
+      struct ProductStock listItem = {product,requestQty};
+
+      // increment the index and put the stock item in to the stock array
+      order.liveList[order.index] = listItem;
+      
+      printf("%s\n", order.liveList[order.index].product.name);
+      printf("%f\n", order.liveList[order.index].product.price);
+      printf("%d\n", order.liveList[order.index].quantity);
+      order.index++;
+      
       // ask the user do they want to enter more items
-      system("@cls||clear");
+      //system("@cls||clear");
       printf("\nWould you like to order anything else? (y/n)");
       scanf("\n%s", &continueOrder);
+   }
+   for(int i=0;i<order.index;i++){
+      printf("%s\n", order.liveList[i].product.name);
+      printf("%f\n", order.liveList[i].product.price);
+      printf("%d\n", order.liveList[i].quantity);
+   }
 
-   };
-      // process the order - need to copy down the code from above and mod it for this
-      printf("%s\n", order.liveList[3].product.name);
-      printf("%d\n", order.liveList[3].quantity);
-   
-
+   return order;
 };
+
+void processLiveOrder(struct Shop* s, struct liveOrder lo){
+   // create a variable to store the total cost of the order
+   double orderTotal = 0;
+   printf("Lo: %d", lo.index);
+   // loop through the order and calculate the total cost
+   for(int i = 0; i <= lo.index; i++){
+      printf("%f\n", orderTotal);   
+      orderTotal = orderTotal + (lo.liveList[i].product.price * lo.liveList[i].quantity);
+   }
+   printf("%f", orderTotal);
+/*
+
+   // if the total cost is greater that the budget, throw an error and terminate the transaction
+   if(orderTotal > c->budget){
+      printf("\nERROR: order total exceeds customer budget.\n"); 
+      exit(0);
+   }
+   // check is each item stocked
+   for(int i = 0; i < c->index; i++){
+      if (strcmp(findProduct(s, c->shoppingList[i].product.name),"NULL")==0){
+         printf("\nERROR: Non Stock Item, %s, on Customer Order.\n",c->shoppingList[i].product.name);
+         exit(0);
+      }
+   }
+   // check if we have each item on the order in stock
+   for(int i = 0; i < c->index; i++){
+      for(int j = 0; j < s->index; j++){
+         if(strcmp(c->shoppingList[i].product.name,s->stock[j].product.name)==0){
+            // check do we have enough in stock
+            if(c->shoppingList[i].quantity > s->stock[j].quantity){
+               printf("\nERROR: Not enough %s in stock to fulfil order.\n", c->shoppingList[i].product.name);
+               exit(0);
+            }   
+            //deplete the shop stock by the ordered amount
+            s->stock[j].quantity -= c->shoppingList[i].quantity;
+            // update the cash in by the amount of the line of the order
+            s->cash += c->shoppingList[i].product.price * c->shoppingList[i].quantity;
+            // deplete the budget by the same amount
+            c->budget -= c->shoppingList[i].product.price * c->shoppingList[i].quantity; 
+            }
+      }
+   } */
+};
+
+
+
 
 void mainScreen(struct Shop s){
    int choice = 0;
@@ -332,7 +394,13 @@ void mainScreen(struct Shop s){
    else if(choice == 3)
    {
       // need code here
-      processLiveOrder(&s);
+      struct liveOrder live = createLiveOrder(s);
+      for(int i =0; i<live.index; i++){
+         printf("%s\n", live.liveList[i].product.name);
+         printf("%f\n", live.liveList[i].product.price);
+         printf("%d\n", live.liveList[i].quantity);
+      }
+      //processLiveOrder(&s, live);
       //system("@cls||clear");
    }
    else
