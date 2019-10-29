@@ -254,7 +254,6 @@ struct liveOrder createLiveOrder(struct Shop s){
    //create a structure for the order
    struct liveOrder order;
    order.index = 0;
-   printf("Start Index: %d", order.index);
    // this is used a boolean operator a while loop
    char continueOrder;
    // keep accepting items until the users says no
@@ -290,26 +289,21 @@ struct liveOrder createLiveOrder(struct Shop s){
       printf("\nWould you like to order anything else? (y/n)");
       scanf("\n%s", &continueOrder);
    }
-   for(int i=0;i<order.index;i++){
-      printf("%s\n", order.liveList[i].product.name);
-      printf("%f\n", order.liveList[i].product.price);
-      printf("%d\n", order.liveList[i].quantity);
-   }
-
+   printf("Index: %d\n", order.index);
    return order;
 };
 
 void processLiveOrder(struct Shop* s, struct liveOrder lo){
    // create a variable to store the total cost of the order
    double orderTotal = 0;
-   printf("Lo: %d", lo.index);
+   printf("Index: %d\n", lo.index);
    // loop through the order and calculate the total cost
-   for(int i = 0; i <= lo.index; i++){
+  /* for(int i = 0; i <= lo.index; i++){
       printf("%f\n", orderTotal);   
       orderTotal = orderTotal + (lo.liveList[i].product.price * lo.liveList[i].quantity);
    }
    printf("%f", orderTotal);
-/*
+
 
    // if the total cost is greater that the budget, throw an error and terminate the transaction
    if(orderTotal > c->budget){
@@ -395,12 +389,13 @@ void mainScreen(struct Shop s){
    {
       // need code here
       struct liveOrder live = createLiveOrder(s);
-      for(int i =0; i<live.index; i++){
+      printf("Index: %d\n", live.index);
+      /*for(int i =0; i<live.index; i++){
          printf("%s\n", live.liveList[i].product.name);
          printf("%f\n", live.liveList[i].product.price);
          printf("%d\n", live.liveList[i].quantity);
-      }
-      //processLiveOrder(&s, live);
+      }*/
+      processLiveOrder(&s, live);
       //system("@cls||clear");
    }
    else
