@@ -70,7 +70,7 @@ void printCustomer(struct Customer c){
    printf("-----------------------------------------------------\n");
    printf("%s's Order:\n", c.name);
    printf("-----------------------------------------------------\n");
-   printf("| Product             |  Qty | Cost Each | Line Cost |\n");
+   printf("| Product             |  Qty | Unit Cost | Line Cost |\n");
    printf("-----------------------------------------------------\n");
    //print the details of each product in the shop
    for(int i =0; i<c.index; i++){
