@@ -17,12 +17,13 @@ I have included the project files in the `java-shop` folder. The project source 
 
 ## Running the software
 
-In order to run this software is is expected that you have an operation C compiler and Java compliler installed. The best way get the software installed is to clone it from Github as follows:
+In order to run this software is is expected that you have an operational <a href="https://gcc.gnu.org/">C compiler</a> and <a href="https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">Java compliler</a> installed. The best way get the software installed is to clone it from Github as follows:
 
 `git clone https://github.com/shkyler/gmit-mpp-shop.git`
 
 To run the C project from this repository run the following commands:
-``` cd c-shop
+``` 
+    cd c-shop
     gcc shop.c
     ./a.out
 ```
