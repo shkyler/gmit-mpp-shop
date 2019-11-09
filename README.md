@@ -19,4 +19,12 @@ I have included the project files in the `java-shop` folder. The project source 
 
 In order to run this software is is expected that you have an operation C compiler and Java compliler installed. The best way get the software installed is to clone it from Github as follows:
 
-`git clone `
+`git clone https://github.com/shkyler/gmit-mpp-shop.git`
+
+To run the C project from this repository run the following commands:
+``` cd c-shop
+    gcc shop.c
+    ./a.out
+```
+
+
