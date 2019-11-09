@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/shkyler/gmit-pfda-project/master/img/GMITLOGO.jpg" width="500"/></p>
+
 # GMIT Multi-Paradigm Programming Shop Assignment
 The purpose of this assignment is to write a shop simulation using a procedural programming style in C, and then to write the same project using an object oriented style in Java. A short report is then to be written to compare the 2 paradigms.
 
