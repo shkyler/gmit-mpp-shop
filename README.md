@@ -23,9 +23,18 @@ In order to run this software is is expected that you have an operational <a hre
 
 To run the C project from this repository run the following commands:
 ``` 
-    cd c-shop
-    gcc shop.c
-    ./a.out
+cd c-shop
+gcc shop.c
+./a.out
 ```
 
+To run the Java project from this repository run the following commands:
+```
+cd java-shop/src/shop
+javac *.java -d../../bin
+cd ../../
+java -cp bin/ shop.Shop
+
+```
+This compliles the code to the `bin` folder and and then run the compiled code from the project root.
 
