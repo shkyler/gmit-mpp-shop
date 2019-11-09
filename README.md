@@ -3,6 +3,8 @@ The purpose of this assignment is to write a shop simulation using a procedural 
 
 In this repository you will find the C program in the file `c-shop`. The code for the program is written in the file `shop.c`. 
 
+The report is available in `G00364753 - P Moore - MPP - Shop Report.pdf`.
+
 As part of the project we were to provide different orders which may or may no be processible by the shop.
 
 I have included 4 order.csv files as follows:
