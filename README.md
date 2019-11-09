@@ -1,15 +1,15 @@
 # GMIT Multi-paradigm Programming "Shop Assignment"
-The purpose of this assingment is to write a shop simulation using a procedural programming style in C, and the same project using an object oriented style in Java and then to compare the 2 paradigms.
+The purpose of this assignment is to write a shop simulation using a procedural programming style in C, and then to write the same project using an object oriented style in Java. A short report is then to be written to compare the 2 paradigms.
 
-In this repository you will find the C part in the file `c-shop`. The program is written in the file `shop.c`. 
+In this repository you will find the C program in the file `c-shop`. The code for the program is written in the file `shop.c`. 
 
 As part of the project we were to provide different orders which may or may no be processible by the shop.
 
 I have included 4 order.csv files as follows:
 * order1.csv - the shop should be able to process this order (1 time)
-* order2.csv - the total bill shouls exceed the customer budget - this will crash the program with an appropriate error
-* order3.csv - has an item on the list that is not stocked - this will crash the proejct with an appropriate error
-* order4.csv - orders more coke cans than are available - this will crash the proejct with an appropriate error
+* order2.csv - the total bill should exceed the customer budget - this will throw an appropriate error and return to the program
+* order3.csv - has an item on the list that is not stocked - this will throw an appropriate error and return to the program
+* order4.csv - orders more Coke Cans than are available - this will throw an appropriate error and return to the program
 
 For the Java implementation:
 
